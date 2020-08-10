@@ -102,7 +102,7 @@ func (e *Enviper) bindEnvs(in interface{}, prev ...string) {
 			if fieldKind != reflect.Slice {
 				_ = e.Viper.BindEnv(key)
 			} else {
-				_ = e.Viper.BindEnvSliceKey(key)
+				_ = e.Viper.BindEnvSliceValue(key)
 			}
 
 		}
