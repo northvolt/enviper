@@ -29,7 +29,7 @@ import (
 	"reflect"
 	"strings"
 
-	"github.com/spf13/viper"
+	"github.com/northvolt/viper"
 )
 
 // Enviper is a wrapper struct for viper,
@@ -84,7 +84,8 @@ func (e *Enviper) bindEnvs(in interface{}, prev ...string) {
 		} else {
 			tv = t.Name
 		}
-		switch fv.Kind() {
+		fieldKind := fv.Kind()
+		switch fieldKind {
 		case reflect.Struct:
 			e.bindEnvs(fv.Interface(), append(prev, tv)...)
 		case reflect.Map:
@@ -95,10 +96,15 @@ func (e *Enviper) bindEnvs(in interface{}, prev ...string) {
 				}
 			}
 		default:
-			env := strings.Join(append(prev, tv), ".")
+			key := strings.Join(append(prev, tv), ".")
 			// Viper.BindEnv will never return error
-			// because env is always non empty string
-			_ = e.Viper.BindEnv(env)
+			// because key is always non empty string
+			if fieldKind != reflect.Slice {
+				_ = e.Viper.BindEnv(key)
+			} else {
+				_ = e.Viper.BindEnvSliceKey(key)
+			}
+
 		}
 	}
 }
