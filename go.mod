@@ -1,4 +1,4 @@
-module github.com/iamolegga/enviper
+module github.com/northvolt/enviper
 
 go 1.14
 
