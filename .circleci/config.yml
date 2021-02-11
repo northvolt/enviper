@@ -5,7 +5,7 @@ jobs:
       - image: circleci/golang:latest
         environment:
           GO111MODULE: "on"
-    working_directory: /go/src/github.com/iamolegga/enviper
+    working_directory: /go/src/github.com/northvolt/enviper
     steps:
       - checkout
       - run:

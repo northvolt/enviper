@@ -29,7 +29,7 @@ import (
 	"reflect"
 	"strings"
 
-	"github.com/spf13/viper"
+	"github.com/northvolt/viper"
 )
 
 // Enviper is a wrapper struct for viper,
@@ -46,7 +46,7 @@ func New(v *viper.Viper) *Enviper {
 
 // Unmarshal unmarshals the config into a Struct just like viper does.
 // The difference between enviper and viper is in automatic overriding data from file by data from env variables
-func (e *Enviper) Unmarshal(rawVal interface{}) error {
+func (e *Enviper) Unmarshal(rawVal interface{}, opts ...viper.DecoderConfigOption) error {
 	if err := e.Viper.ReadInConfig(); err != nil {
 		switch err.(type) {
 		case viper.ConfigFileNotFoundError:
@@ -57,9 +57,9 @@ func (e *Enviper) Unmarshal(rawVal interface{}) error {
 	}
 	// We need to unmarshal before the env binding to make sure that keys of maps are bound just like the struct fields
 	// We silence errors here because we'll unmarshal a second time
-	_ = e.Viper.Unmarshal(rawVal)
+	_ = e.Viper.Unmarshal(rawVal, opts...)
 	e.readEnvs(rawVal)
-	return e.Viper.Unmarshal(rawVal)
+	return e.Viper.Unmarshal(rawVal, opts...)
 }
 
 func (e *Enviper) readEnvs(rawVal interface{}) {
@@ -84,7 +84,8 @@ func (e *Enviper) bindEnvs(in interface{}, prev ...string) {
 		} else {
 			tv = t.Name
 		}
-		switch fv.Kind() {
+		fieldKind := fv.Kind()
+		switch fieldKind {
 		case reflect.Struct:
 			e.bindEnvs(fv.Interface(), append(prev, tv)...)
 		case reflect.Map:
@@ -95,10 +96,15 @@ func (e *Enviper) bindEnvs(in interface{}, prev ...string) {
 				}
 			}
 		default:
-			env := strings.Join(append(prev, tv), ".")
+			key := strings.Join(append(prev, tv), ".")
 			// Viper.BindEnv will never return error
-			// because env is always non empty string
-			_ = e.Viper.BindEnv(env)
+			// because key is always non empty string
+			if fieldKind != reflect.Slice {
+				_ = e.Viper.BindEnv(key)
+			} else {
+				_ = e.Viper.BindEnvSliceValue(key)
+			}
+
 		}
 	}
 }

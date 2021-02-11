@@ -1,10 +1,10 @@
 # enviper
 
-[![GoDoc](https://godoc.org/github.com/iamolegga/enviper?status.svg)](https://godoc.org/github.com/iamolegga/enviper)
+[![GoDoc](https://godoc.org/github.com/northvolt/enviper?status.svg)](https://godoc.org/github.com/northvolt/enviper)
 [![Build Status](https://circleci.com/gh/iamolegga/enviper.svg?style=svg)](https://circleci.com/gh/iamolegga/enviper)
 [![Test Coverage](https://api.codeclimate.com/v1/badges/85fb13ce6638226a3732/test_coverage)](https://codeclimate.com/github/iamolegga/enviper/test_coverage)
 [![Maintainability](https://api.codeclimate.com/v1/badges/85fb13ce6638226a3732/maintainability)](https://codeclimate.com/github/iamolegga/enviper/maintainability)
-[![Go Report Card](https://goreportcard.com/badge/github.com/iamolegga/enviper)](https://goreportcard.com/report/github.com/iamolegga/enviper)
+[![Go Report Card](https://goreportcard.com/badge/github.com/northvolt/enviper)](https://goreportcard.com/report/github.com/northvolt/enviper)
 
 Package enviper is a helper/wrapper for [viper](http://github.com/spf13/viper) with the same API.
 It makes it possible to unmarshal config to struct considering environment variables.
@@ -29,7 +29,7 @@ e.Unmarshal(&config)
 package main
 
 import (
-	"github.com/iamolegga/enviper"
+	"github.com/northvolt/enviper"
 	"github.com/spf13/viper"
 )
 
